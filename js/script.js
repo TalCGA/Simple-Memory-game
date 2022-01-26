@@ -1,54 +1,89 @@
-let gameStr="";
-let cardArr;
+let     gameStr ="";
+let     cardArr;
+let     attemptStr= ""
+const   form = document.querySelector("form");
+const   gameOverTitle=document.getElementById("gameOverTitle");
 
-function StartGame(){
-    gameStr= document.getElementById("inputString").value;
-    if (!parseString(gameStr))   return;
-    console.log("before:")
-    for(let i=0; i<numCouples;i++){
-        console.log( cardArr[i][0]+cardArr[i][1])
-    }
-    Shuffle(cardArr);
-    console.log("after:")
 
-    for(let i=0; i<numCouples;i++){
-        console.log( cardArr[i][0]+cardArr[i][1])
-    }
-}
-
-function ParseString(){
-    numCouples= gameStr.length/2;
-    iForString=0;
-
-    // even validation
-    if (gameStr.length%2)   {
-        alert("Please provide an even string");
+document.querySelector("#submit").addEventListener("click",(e)=>{
+    // disable submit another game string while playing
+    if (isStillPlaying()){
+        e.preventDefault();
         return;
     }
+    // if is not the first game- reset the last itteration
+    if(gameOverTitle.className=='show')  resetGame(); 
 
-    cardArr= new Array(numCouples);
-    for(let i=0; i<numCouples; i++){
-        if (iForString+1 > gameStr.length){
-            alert("Error accured, please provide new game string");
-            return false;
+    gameStr= document.getElementById("inputString").value;
+})
+
+const isStillPlaying=()=>{
+    if (!gameOverTitle) return false;
+    return ((gameOverTitle.className=='hide') && (document.getElementsByClassName("card").length>0))
+}
+
+document.querySelector("form").addEventListener("submit", (e) =>{
+    e.preventDefault();
+
+    let fullWidth = window.innerWidth;
+    let fullHeight = window.innerHeight;
+    for(let i=0; i<gameStr.length;i++){
+            let element = document.createElement("div");
+            element.textContent = "*";
+            element.title = gameStr[i];
+            element.className = "card";
+            element.style.position = "absolute";
+            element.style.left = Math.round(Math.random() * fullWidth) + "px";
+            element.style.top = Math.round(Math.random() * fullHeight) + "px";
+            document.body.appendChild(element);
+    }
+});
+
+
+document.addEventListener('click', function(e){
+    if(e.target && e.target.className== 'card'){
+        if  (e.target.textContent == "*")   {
+            e.target.textContent=e.target.title;
+            if(attempt(e.target.title)){
+                if (attemptStr.length==gameStr.length){
+                    gameOverTitle.classList.remove('hide');
+                    gameOverTitle.classList.add('show');
+                }
+            }
+            else{
+                elements=document.getElementsByClassName("card");
+                for(let i = 0; i < elements.length; i++){
+                    setTimeout(() => { elements[i].innerText="*";},2000);
+                }
+            }
         }
-        cardArr[i]= new Array(2);
-        cardArr[i][0]=gameStr[iForString];
-        cardArr[i][1]=gameStr[++iForString];
-        iForString++;
     }
-    return true;
+});
+
+const attempt=(c)=>{
+    // if the user have won
+    if (attemptStr.len==gameStr.length)    return true;
+
+    // if fits the chronological input chars
+    if (gameStr[attemptStr.length]==c)  {
+        attemptStr+=c;
+        return true;
+    }
+    
+    // start all over
+    else    attemptStr="";
+    return false;
 }
 
-function Shuffle() {
-    let currentIndex = cardArr.length, temporaryValue, randomIndex;
-    while (0 !== currentIndex) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        temporaryValue = cardArr[currentIndex];
-        cardArr[currentIndex] = cardArr[randomIndex];
-        cardArr[randomIndex] = temporaryValue;
+const resetGame=()=>{
+    elements=document.getElementsByClassName("card");
+    
+    // clearing the "game board" by removing divs
+    while(elements[0]) {
+        elements[0].parentNode.removeChild(elements[0]);
     }
-    return cardArr;
-}
 
+    // hiding the gameOverTitle
+    gameOverTitle.classList.remove('show');
+    gameOverTitle.classList.add('hide');
+}
