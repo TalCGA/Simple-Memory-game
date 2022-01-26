@@ -5,16 +5,8 @@ const   form = document.querySelector("form");
 const   gameOverTitle=document.getElementById("gameOverTitle");
 
 
-document.querySelector("#submit").addEventListener("click",(e)=>{
-    // disable submit another game string while playing
-    if (isStillPlaying()){
-        e.preventDefault();
-        return;
-    }
-    // if is not the first game- reset the last itteration
-    if(gameOverTitle.className=='show')  resetGame(); 
+document.getElementById("submit").addEventListener("click",(e)=>{
 
-    gameStr= document.getElementById("inputString").value;
 })
 
 const isStillPlaying=()=>{
@@ -24,6 +16,16 @@ const isStillPlaying=()=>{
 
 document.querySelector("form").addEventListener("submit", (e) =>{
     e.preventDefault();
+    // disable submit another game string while playing
+    if (isStillPlaying()){
+        e.preventDefault();
+        return;
+    }
+    // if is not the first game- reset the last itteration
+    if(gameOverTitle.className=='show')  resetGame(); 
+
+    gameStr= document.getElementById("inputString").value;
+    if (gameStr.includes(" "))  return;
 
     let fullWidth = window.innerWidth;
     let fullHeight = window.innerHeight;
