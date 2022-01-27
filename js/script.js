@@ -3,7 +3,7 @@ let     cardArr;
 let     attemptStr= ""
 const   form = document.querySelector("form");
 const   gameOverTitle=document.getElementById("gameOverTitle");
-
+const   gameBoard= document.getElementById("gameBoard");
 
 const isStillPlaying=()=>{
     if (!gameOverTitle) return false;
@@ -23,8 +23,9 @@ form.addEventListener("submit", (e) =>{
     gameStr= document.getElementById("inputString").value;
     if (gameStr.includes(" "))  return;
 
-    let fullWidth = window.innerWidth;
-    let fullHeight = window.innerHeight;
+    let fullWidth = getInnerWidth(gameBoard);
+    let fullHeight =getInnerWidth(gameBoard);
+    console.log(gameBoard)
     for(let i=0; i<gameStr.length;i++){
             let element = document.createElement("div");
             element.textContent = "*";
@@ -33,9 +34,24 @@ form.addEventListener("submit", (e) =>{
             element.style.position = "absolute";
             element.style.left = Math.round(Math.random() * fullWidth) + "px";
             element.style.top = Math.round(Math.random() * fullHeight) + "px";
-            document.body.appendChild(element);
+            gameBoard.appendChild(element);
+
     }
 });
+
+const getInnerWidth=(elm)=>{
+    var computed = getComputedStyle(elm),
+        padding = parseInt(computed.paddingLeft) + parseInt(computed.paddingRight);
+  
+    return elm.clientWidth-padding;
+}
+
+const getInnerHeight=(elm)=>{
+    var computed = getComputedStyle(elm),
+        padding = parseInt(computed.paddingTop) + parseInt(computed.paddingBottom);
+  
+    return elm.clientHeight - padding;
+}
 
 
 document.addEventListener('click', function(e){
