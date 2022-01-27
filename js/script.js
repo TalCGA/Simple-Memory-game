@@ -5,10 +5,6 @@ const   form = document.querySelector("form");
 const   gameOverTitle=document.getElementById("gameOverTitle");
 
 
-document.getElementById("submit").addEventListener("click",(e)=>{
-
-})
-
 const isStillPlaying=()=>{
     if (!gameOverTitle) return false;
     return ((gameOverTitle.className=='hide') && (document.getElementsByClassName("card").length>0))
