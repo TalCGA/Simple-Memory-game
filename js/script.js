@@ -14,7 +14,7 @@ const isStillPlaying=()=>{
     return ((gameOverTitle.className=='hide') && (document.getElementsByClassName("card").length>0))
 }
 
-document.querySelector("form").addEventListener("submit", (e) =>{
+form.addEventListener("submit", (e) =>{
     e.preventDefault();
     // disable submit another game string while playing
     if (isStillPlaying()){
